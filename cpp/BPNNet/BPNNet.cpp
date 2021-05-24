@@ -2,7 +2,7 @@
 #include <random>
 #include <math.h>
 
-//ÒÔÏÂÊÇ²âÊÔÊ±ÓÃµ½µÄ¿â£¬²âÊÔÍê±ÏºóĞèÒªÉ¾³ı
+//ä»¥ä¸‹æ˜¯æµ‹è¯•æ—¶ç”¨åˆ°çš„åº“ï¼Œæµ‹è¯•å®Œæ¯•åéœ€è¦åˆ é™¤
 #include <iostream>
 
 
@@ -139,7 +139,7 @@ bool BPLayer::BackPropagate(const BPLayer* layerBef, double step)
 	}
 	activationFun->Diff(nodeVal, nodeValUnActived, diffActivationFun, nodeNum);
 
-	//ÕâÀïÊÇ½¨Á¢ÔÚÍøÂçÒÑ¾­¸ü¾ßÄÜÁ¿º¯Êı¶ÔxBack×öÁË²¿·Ö¸³Öµ
+	//è¿™é‡Œæ˜¯å»ºç«‹åœ¨ç½‘ç»œå·²ç»æ›´å…·èƒ½é‡å‡½æ•°å¯¹xBackåšäº†éƒ¨åˆ†èµ‹å€¼
 	MatrixDot(tempXBackBackProgation, diffActivationFun, nodeNum, xBack);
 
 	for (int i = 0; i < nodeNum; i++) {
@@ -173,7 +173,7 @@ void BPLayer::SetTempXBack(double* xBack)
 
 void BPLayer::SynParameter()
 {
-	//memcpy¸üÎª¸ßĞ§
+	//memcpyæ›´ä¸ºé«˜æ•ˆ
 	memcpy(weight, weightBest, sizeof(double) * nodeBef * nodeNum);
 	memcpy(bias, biasBest, sizeof(double) * nodeNum);
 }
@@ -264,7 +264,7 @@ BPNNet::BPNNet(int layerNum, int* nodeNums, EnergyFun::EnergyFunType type)
 
 BPNNet::~BPNNet()
 {
-	//ÊÍ·ÅnetÖĞµÄ
+	//é‡Šæ”¾netä¸­çš„
 	delete net->layer;
 	while (net->nodeNext != NULL) {
 		net = net->nodeNext;
@@ -333,7 +333,7 @@ bool BPNNet::SetEnergyFun(EnergyFun::EnergyFunType type)
 
 bool BPNNet::Initial()
 {
-	//°´net³õÊ¼»¯
+	//æŒ‰netåˆå§‹åŒ–
 	NetNode* nowLayer = net->nodeNext;
 	default_random_engine e(GetTickCount64());
 	while (nowLayer != NULL) {
@@ -358,7 +358,7 @@ bool BPNNet::ForePropagate(double* input)
 		printf("Net not initialized\n"); 
 		return false;
 	}
-	//ÓÃnet´«²¥
+	//ç”¨netä¼ æ’­
 	try {
 		for (int i = 0; i < nodeNumInputLayer; i++) {
 			net->layer->nodeVal[i] = input[i];
@@ -386,14 +386,14 @@ bool BPNNet::BackPropagate(double* target)
 		printf("Net not initialized\n");
 		return false;
 	}
-	//Êä³ö²ã´«²¥ÌØÊâ´¦Àí
+	//è¾“å‡ºå±‚ä¼ æ’­ç‰¹æ®Šå¤„ç†
 
 	energyFun->Diff(output, target, nodeNumOutLayer, diffEnergyFun);
 	outputLayer->layer->SetTempXBack(diffEnergyFun);
 	outputLayer->layer->BackPropagate(outputLayer->nodeBef->layer, step);
 
 
-	//ÆäËü²ã´«²¥
+	//å…¶å®ƒå±‚ä¼ æ’­
 	NetNode* nowLayer = outputLayer->nodeBef;
 	while (nowLayer->layer->layerType != BPLayer::VITUAL) {
 		nowLayer->layer->BackPropagate(nowLayer->nodeBef->layer, nowLayer->nodeNext->layer, step);
@@ -401,7 +401,7 @@ bool BPNNet::BackPropagate(double* target)
 	}
 
 
-	//ËùÓĞ²ãÓÃweightBestºÍbiasBestÍ¬²½weightºÍbias
+	//æ‰€æœ‰å±‚ç”¨weightBestå’ŒbiasBeståŒæ­¥weightå’Œbias
 	nowLayer = net->nodeNext;
 	while (true) {
 		nowLayer->layer->SynParameter();
@@ -415,7 +415,6 @@ bool BPNNet::BackPropagate(double* target)
 
 bool BPNNet::Train(double* input, double* target, int dataSetSize, int cycle)
 {
-	static default_random_engine e(clock());
 	static uniform_int_distribution<int> u(0, dataSetSize-1);
 	int index = 0;
 	for (int cyc = 0; cyc < cycle; cyc++) {
@@ -423,7 +422,7 @@ bool BPNNet::Train(double* input, double* target, int dataSetSize, int cycle)
 		ForePropagate(input + index * nodeNumInputLayer);
 		BackPropagate(target + index * nodeNumOutLayer);
 
-		////ÏÔÊ¾±¾´ÎÏÂ½µºóµÄÄÜÁ¿Öµ
+		////æ˜¾ç¤ºæœ¬æ¬¡ä¸‹é™åçš„èƒ½é‡å€¼
 		//ForePropagate(input + index * nodeNumInputLayer);
 		//energyFun->Fun(output, target + index * nodeNumOutLayer, nodeNumOutLayer, &energy);
 		//printf("%f\n", energy);
@@ -467,7 +466,7 @@ void ActivationFunSigmoid::Active(double* x, double* xActived, int n)
 
 void ActivationFunSigmoid::Diff(double* xActived, double* xUnActived, double* diff, int n)
 {
-	//ÚÀ£¬¾ÍÊÇÍæ£¬´«½øÀ´²»ÓÃ
+	//è¯¶ï¼Œå°±æ˜¯ç©ï¼Œä¼ è¿›æ¥ä¸ç”¨
 	for (int i = 0; i < n; i++) {
 		diff[i] = xActived[i] * (1 - xActived[i]);
 	}
