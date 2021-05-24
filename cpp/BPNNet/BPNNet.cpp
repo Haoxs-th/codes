@@ -7,8 +7,6 @@
 
 
 
-
-
 using namespace std;
 
 clock_t timeStart, timeEnd;
@@ -77,8 +75,6 @@ bool BPLayer::Initial(default_random_engine e)
 
 bool BPLayer::Initial()
 {
-	//先不用static，看一下能不能输出相同值
-	static default_random_engine e(1);
 	static uniform_real_distribution<double> u(-0.5, 0.5);
 	for (int i = 0; i < nodeNum * nodeBef; i++) {
 		weightBest[i] = u(randomEngine);
@@ -200,7 +196,7 @@ BPLayer::~BPLayer() {
 
 BPNNet::BPNNet(int layerNum, int* nodeNums, EnergyFun::EnergyFunType type)
 {
-	randomEngine.seed(1);
+	//randomEngine.seed();
 
 	step = STEP;
 	isInitial = false;
@@ -419,28 +415,28 @@ bool BPNNet::BackPropagate(double* target)
 
 bool BPNNet::Train(double* input, double* target, int dataSetSize, int cycle)
 {
-	//static default_random_engine e(clock());
-	//static uniform_int_distribution<int> u(0, dataSetSize-1);
-	//int index = 0;
-	//for (int cyc = 0; cyc < cycle; cyc++) {
-	//	index = u(e);
-	//	ForePropagate(input + index * nodeNumInputLayer);
-	//	BackPropagate(target + index * nodeNumOutLayer);
-
-	//	////显示本次下降后的能量值
-	//	//ForePropagate(input + index * nodeNumInputLayer);
-	//	//energyFun->Fun(output, target + index * nodeNumOutLayer, nodeNumOutLayer, &energy);
-	//	//printf("%f\n", energy);
-	//}
+	static default_random_engine e(clock());
+	static uniform_int_distribution<int> u(0, dataSetSize-1);
+	int index = 0;
 	for (int cyc = 0; cyc < cycle; cyc++) {
-		for (int i = 0; i < dataSetSize; i++) {
-			ForePropagate(input + i * nodeNumInputLayer);
-			BackPropagate(target + i * nodeNumOutLayer);
-		}
+		index = u(randomEngine);
+		ForePropagate(input + index * nodeNumInputLayer);
+		BackPropagate(target + index * nodeNumOutLayer);
 
-		//energyFun->Fun(output, target, nodeNumOutLayer, &energy);
+		////显示本次下降后的能量值
+		//ForePropagate(input + index * nodeNumInputLayer);
+		//energyFun->Fun(output, target + index * nodeNumOutLayer, nodeNumOutLayer, &energy);
 		//printf("%f\n", energy);
 	}
+	//for (int cyc = 0; cyc < cycle; cyc++) {
+	//	for (int i = 0; i < dataSetSize; i++) {
+	//		ForePropagate(input + i * nodeNumInputLayer);
+	//		BackPropagate(target + i * nodeNumOutLayer);
+	//	}
+
+	//	energyFun->Fun(output, target, nodeNumOutLayer, &energy);
+	//	printf("%f\n", energy);
+	//}
 
 	return true;
 }
@@ -529,4 +525,14 @@ void MatrixMul(double* mat1, double* mat2, int row1, int col1_row2, int col2, do
 			}
 		}
 	}
+}
+
+int MaxIndex(double* input, int size)
+{
+	int maxIndex = 0;
+	for (int i = 1; i < size; i++) {
+		if (input[i] > input[maxIndex])
+			maxIndex = i;
+	}
+	return maxIndex;
 }

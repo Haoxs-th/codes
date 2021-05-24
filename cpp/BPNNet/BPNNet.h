@@ -3,11 +3,6 @@
 #include <string>
 #include <random>
 
-//能用一维数组就用一维数组，主要方便使用eigen库
-//惊奇发现特么的用eigen库来后向传播速度慢得多
-//10*10 -> 10*10 网络， 100000次传播，用eigen时耗时500+ms，不用时50ms
-//后向传播还是用CBasicComputation中的函数，因为只涉及到了矩阵乘和加
-
 
 static std::default_random_engine randomEngine;
 //能量函数和激活函数单独写成了虚拟类和子类，方便后续扩充
@@ -191,5 +186,8 @@ void MatrixAdd(double* mat1, double* mat2, int size, double* result);
 void MatrixSub(double* mat1, double* mat2, int size, double* result);
 //乘法
 void MatrixMul(double* mat1, double* mat2, int row1, int col1_row2, int col2, double* result);
+
+//获取分类结果
+int MaxIndex(double* input, int size);
 
 
