@@ -10,7 +10,7 @@
 2. 网络初始(必要，否则无法传播)
 3. 网络训练
 4. 向前传播
-```
+```c++
 int layers[] = {node1, node2, node3, node4};
 BPNNet net(3, layers);
 net.Initial();
