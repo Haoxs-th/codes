@@ -1,6 +1,29 @@
 # BP神经网络
+[TOC]
 
-## 第一次提交(21/05/23)
+## 使用方法
+
+所有内容封装在BPNNet类中
+
+调用流程:
+1. 以网络层数、各层节点数为参数创建BPNNet对象
+2. 网络初始(必要，否则无法传播)
+3. 网络训练
+4. 向前传播
+```
+int layers[] = {node1, node2, node3, node4};
+BPNNet net(3, layers);
+net.Initial();
+int times = 500000;
+net.Train(trainInput, trainTarget, ptsNum, times);
+net.ForePropagate(x);
+double *result = new double[node4];
+result = net.output;
+```
+
+## 提交记录
+
+### 第一次提交(21/05/23)
 
 实现了BP神经网络，但存在问题：
 
@@ -10,7 +33,7 @@
 2. 当随机数引擎不设置种子时(自动按照时间设置？)，每次训练的结果存在差异，多次测试结果中会出现正确或错误的情况，初步判断应该是网络初始化的影响
 3. 当固定随机数种子时，训练结果完全一致(存疑)
 
-## 第二次提交(21/05/24)
+### 第二次提交(21/05/24)
 
 小修改了一下，BPNNet.h中定义的全局随机数引擎
 ```c++
