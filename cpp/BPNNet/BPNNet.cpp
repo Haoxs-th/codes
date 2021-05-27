@@ -2,14 +2,12 @@
 #include <random>
 #include <math.h>
 
-//以下是测试时用到的库，测试完毕后需要删除
+//以下是测试时用到的玩意儿，测试完毕后可以删除
 #include <iostream>
-
-
-
 using namespace std;
-
 clock_t timeStart, timeEnd;
+//
+
 BPLayer::BPLayer(int nodeNum, int nodeBef, LAYERTYPE layerType, ActivationFun::ActivationFunType type) {
 	isInitial = false;
 	SetActivationFun(type);
